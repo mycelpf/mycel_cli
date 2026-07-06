@@ -1,86 +1,26 @@
-THIRD-PARTY SOFTWARE NOTICES
-
-mycel_cli incorporates third-party open-source software. The following
-notices are provided in compliance with the respective license terms.
-
-================================================================================
-
-MIT License
------------
-
-The following dependencies are licensed under the MIT License:
-
-  - github.com/KyleBanks/depth v1.2.1
-  - github.com/josharian/intern v1.0.0
-  - github.com/mailru/easyjson v0.7.6
-  - github.com/swaggo/files/v2 v2.0.0
-  - github.com/swaggo/http-swagger/v2 v2.0.2
-  - github.com/swaggo/swag v1.16.6
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-
-================================================================================
-
-Apache License 2.0
-------------------
-
-The following dependencies are licensed under the Apache License 2.0:
-
-  - github.com/go-openapi/jsonpointer v0.19.5
-  - github.com/go-openapi/jsonreference v0.20.0
-  - github.com/go-openapi/spec v0.20.6
-  - github.com/go-openapi/swag v0.19.15
-  - gopkg.in/yaml.v2 v2.4.0
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-================================================================================
-
-BSD 3-Clause License
---------------------
-
-The following dependencies are licensed under the BSD 3-Clause License:
-
-  - golang.org/x/mod v0.17.0
-  - golang.org/x/tools v0.21.1
-
-Copyright (c) The Go Authors. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-3. Neither the name of the copyright holder nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED.
-
-================================================================================
+github.com/BurntSushi/toml,https://github.com/BurntSushi/toml/blob/v1.4.0/COPYING,MIT
+github.com/aws/aws-sdk-go-v2,https://github.com/aws/aws-sdk-go-v2/blob/v1.42.0/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/config,https://github.com/aws/aws-sdk-go-v2/blob/config/v1.32.25/config/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/credentials,https://github.com/aws/aws-sdk-go-v2/blob/credentials/v1.19.24/credentials/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/feature/ec2/imds,https://github.com/aws/aws-sdk-go-v2/blob/feature/ec2/imds/v1.18.29/feature/ec2/imds/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/internal/configsources,https://github.com/aws/aws-sdk-go-v2/blob/internal/configsources/v1.4.29/internal/configsources/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/internal/endpoints/v2,https://github.com/aws/aws-sdk-go-v2/blob/internal/endpoints/v2.7.29/internal/endpoints/v2/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/internal/sync/singleflight,https://github.com/aws/aws-sdk-go-v2/blob/v1.42.0/internal/sync/singleflight/LICENSE,BSD-3-Clause
+github.com/aws/aws-sdk-go-v2/internal/v4a,https://github.com/aws/aws-sdk-go-v2/blob/internal/v4a/v1.4.30/internal/v4a/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/apprunner,https://github.com/aws/aws-sdk-go-v2/blob/service/apprunner/v1.40.6/service/apprunner/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/costexplorer,https://github.com/aws/aws-sdk-go-v2/blob/service/costexplorer/v1.65.1/service/costexplorer/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding,https://github.com/aws/aws-sdk-go-v2/blob/service/internal/accept-encoding/v1.13.12/service/internal/accept-encoding/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/internal/presigned-url,https://github.com/aws/aws-sdk-go-v2/blob/service/internal/presigned-url/v1.13.29/service/internal/presigned-url/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/route53,https://github.com/aws/aws-sdk-go-v2/blob/service/route53/v1.63.3/service/route53/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/signin,https://github.com/aws/aws-sdk-go-v2/blob/service/signin/v1.2.0/service/signin/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/sso,https://github.com/aws/aws-sdk-go-v2/blob/service/sso/v1.31.3/service/sso/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/ssooidc,https://github.com/aws/aws-sdk-go-v2/blob/service/ssooidc/v1.36.6/service/ssooidc/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go-v2/service/sts,https://github.com/aws/aws-sdk-go-v2/blob/service/sts/v1.43.3/service/sts/LICENSE.txt,Apache-2.0
+github.com/aws/smithy-go,https://github.com/aws/smithy-go/blob/v1.27.1/LICENSE,Apache-2.0
+github.com/aws/smithy-go/internal/sync/singleflight,https://github.com/aws/smithy-go/blob/v1.27.1/internal/sync/singleflight/LICENSE,BSD-3-Clause
+github.com/jackc/pgpassfile,https://github.com/jackc/pgpassfile/blob/v1.0.0/LICENSE,MIT
+github.com/jackc/pgservicefile,https://github.com/jackc/pgservicefile/blob/5a60cdf6a761/LICENSE,MIT
+github.com/jackc/pgx/v5,https://github.com/jackc/pgx/blob/v5.9.1/LICENSE,MIT
+github.com/jackc/puddle/v2,https://github.com/jackc/puddle/blob/v2.2.2/LICENSE,MIT
+golang.org/x/sync/semaphore,https://cs.opensource.google/go/x/sync/+/v0.17.0:LICENSE,BSD-3-Clause
+golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.29.0:LICENSE,BSD-3-Clause

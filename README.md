@@ -1,178 +1,62 @@
-# mcl — mycel platform enabler
+# mycel
 
-CLI and daemon for managing mycel infrastructure, modules, and identity.
+`mycel` is the umbrella CLI for the `mycel_*` family. Its first capability is the
+**app-builder**: it builds, runs, tests, serves, and deploys a *federated app*
+described by a single `mycelfile`.
+
+A federated app is a **pure compiled core** (the shell + host) plus a set of
+**vertically-complete modules** loaded into it **at runtime**. Isolation is
+enforced by physics — the WASM sandbox, the Shadow-DOM boundary, and a per-module
+Postgres schema — not by convention. The CLI compiles each module to WASM, builds
+the core shell, and assembles them into one runnable app.
 
 ## Install
 
-Download the binary for your platform from [Releases](https://github.com/CogniWorks/mycel_cli/releases):
+```bash
+brew install --cask mycelpf/tap/mycel
+```
+
+Or download a platform binary directly from [Releases](https://github.com/mycelpf/mycel_cli/releases)
+and put it on your `PATH`.
+
+## Quickstart
 
 ```bash
-# macOS Apple Silicon
-curl -L https://github.com/CogniWorks/mycel_cli/releases/latest/download/mcl-darwin-arm64 -o mcl
-
-# macOS Intel
-curl -L https://github.com/CogniWorks/mycel_cli/releases/latest/download/mcl-darwin-amd64 -o mcl
-
-# Linux x86_64
-curl -L https://github.com/CogniWorks/mycel_cli/releases/latest/download/mcl-linux-amd64 -o mcl
-
-# Linux ARM64
-curl -L https://github.com/CogniWorks/mycel_cli/releases/latest/download/mcl-linux-arm64 -o mcl
+mycel doctor               # check toolchains + that the mycelfile resolves
+mycel run -f ./path/to/app # build wasm + UI + core, then launch the dev loop
 ```
 
-```bash
-chmod +x mcl && sudo mv mcl /usr/local/bin/
-```
+`mycel doctor` is the first thing to run on a new machine — it reports any missing
+toolchain (cargo, tinygo, wasm-opt, node/npm, go) and where to configure it.
 
-Or build from source:
+## Commands
 
-```bash
-GOWORK=off go build -ldflags="-s -w" -trimpath -o bin/mcl ./cmd/mcl/
-```
+| Command   | What it does                                                              |
+|-----------|----------------------------------------------------------------------------|
+| `new app` | Scaffold a new mycel app (shell + infra + a seed module) at a directory   |
+| `add module` | Scaffold a lean module into an existing app and wire it in             |
+| `build`   | Build every module (WASM + UI) plus the core shell + host                 |
+| `run`     | Build, then launch the app — the local dev loop                           |
+| `test`    | Run the cross-language test pyramid (host + modules + UI)                 |
+| `doctor`  | Check toolchains, machine config, and that the mycelfile resolves         |
+| `server`  | Launch the local web console over the build engine (loopback by default)  |
+| `deploy`  | Package the app for a target (`--to local\|docker\|aws\|gcp`)             |
+| `cluster` | Multi-app clusters: up/down/status/verify/add-app/deploy/promote/…        |
+| `login` / `logout` | Sign in via `mycel_tenants` (device flow) — needed for `cluster promote`'s `--actor` identity and any future authenticated verb |
+| `version` | Print the mycel version                                                   |
 
-## Usage
-
-```
-mcl <command> [flags]
-```
-
-### Management
-
-| Command | Description |
-|---------|-------------|
-| `mcl init` | Bootstrap a workspace |
-| `mcl config set/get/list` | Read and write configuration |
-| `mcl serve --port 9417` | Start daemon (REST + MCP on same port) |
-
-### Fabric (Infrastructure)
-
-| Command | Description |
-|---------|-------------|
-| `mcl fabric up --env dev` | Start all providers |
-| `mcl fabric down --env dev` | Stop all providers |
-| `mcl fabric status --env dev` | Health check with per-service detail |
-| `mcl fabric logs --name mycel_app_db` | Stream container logs |
-| `mcl fabric env list` | List environments |
-| `mcl fabric env switch --env staging` | Switch active environment |
-| `mcl fabric secret set/get/list/rotate` | Manage secrets |
-| `mcl fabric doctor` | Diagnose infrastructure |
-
-Providers: `mycel_app_db` → `mycel_vault` → `mycel_temporal` → `mycel_idp` → `mycel_monitoring`
-
-### Module
-
-| Command | Description |
-|---------|-------------|
-| `mcl module new --name mycel_foo` | Scaffold a new module |
-| `mcl module build --name mycel_iam` | Build Docker image |
-| `mcl module test --name mycel_iam` | Run tests |
-| `mcl module release --name mycel_iam` | Tag, build, push |
-| `mcl module scan --name mycel_iam` | Security scan |
-
-### IAM
-
-| Command | Description |
-|---------|-------------|
-| `mcl iam provision --env dev` | Create schema, seed roles, generate keys |
-| `mcl iam reset --env dev` | Drop and recreate (dev only) |
-| `mcl iam status --env dev` | Verify IAM health |
-
-## Architecture
-
-### Pipeline
-
-Every operation runs through a three-tier pipeline:
-
-1. **Execute & Check** — run the command, verify post-conditions
-2. **Recipe** — if checks fail, match against known fix patterns, apply fix, retry once
-3. **Failure Report** — structured report with context if still failing
-
-Results carry three independent axes:
-
-| Axis | Question | Example |
-|------|----------|---------|
-| **Execution** | Did the command run? | exit 0, checks pass |
-| **Output** | What data came back? | service listing |
-| **Assessment** | What does it mean? | `unhealthy — 0/12 running` |
-
-### Daemon
-
-`mcl serve` exposes REST and MCP on the same port:
-
-- `POST /v1/ops/{command}` — start async operation
-- `GET /v1/ops/{id}` — get result
-- `GET /v1/events?op={id}` — SSE stream
-- `POST /mcp` — JSON-RPC 2.0 (MCP protocol)
-- `GET /health` — health check
-- `GET /swagger/` — API docs
-
-### Locking
-
-Operations declare lock requirements (`fabric:{env}`, `module:{name}`). Read locks allow concurrency; write locks are exclusive. Prevents conflicting operations on the same resource.
-
-## Testing
-
-```
-GOWORK=off go test ./... -v
-```
-
-66 integration tests covering pipeline contracts, REST/MCP endpoints, broadcaster, lock manager, and CLI parsing. No Docker required.
-
-## Release
-
-### 1. Build
-
-Local dev build:
-
-```bash
-GOWORK=off go build -ldflags="-s -w" -trimpath -o bin/mcl ./cmd/mcl/
-```
-
-Cross-compile release binaries:
-
-```bash
-GOWORK=off GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -trimpath -o dist/mcl-darwin-arm64 ./cmd/mcl/
-GOWORK=off GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o dist/mcl-darwin-amd64 ./cmd/mcl/
-GOWORK=off GOOS=linux  GOARCH=arm64 go build -ldflags="-s -w" -trimpath -o dist/mcl-linux-arm64  ./cmd/mcl/
-GOWORK=off GOOS=linux  GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o dist/mcl-linux-amd64  ./cmd/mcl/
-```
-
-| Flag | Effect |
-|------|--------|
-| `-s` | Strip symbol table |
-| `-w` | Strip DWARF debug info |
-| `-trimpath` | Remove local filesystem paths from binary |
-
-Result: ~19MB per binary (vs ~24MB without stripping).
-
-### 2. Tag and publish
-
-```bash
-git tag v0.x.0
-git push origin v0.x.0
-gh release create v0.x.0 dist/mcl-* --title "v0.x.0" --notes "Release notes"
-```
-
-This creates a GitHub release with the 4 platform binaries attached. Requires [`gh` CLI](https://cli.github.com/) (`brew install gh`).
-
-### 3. Source archive protection
-
-GitHub automatically attaches source archives (tar.gz, zip) to every release. These are generated via `git archive`, which respects `.gitattributes` `export-ignore` rules.
-
-Our `.gitattributes` excludes:
-
-| Pattern | What it strips |
-|---------|---------------|
-| `/cmd/` | CLI entrypoint source |
-| `/internal/` | All internal packages |
-| `/docs/` | Swagger generated docs |
-| `/bin/`, `/dist/` | Build artifacts |
-| `/test/`, `/test_workspace/` | Test infrastructure |
-| `go.mod`, `go.sum` | Dependency manifests |
-| `*_test.go` | Test files |
-
-The source archives that ship with the release contain only: `README.md`, `LICENSE`, `Makefile`, `.gitattributes`. No source code is exposed. Users get binaries; source stays private.
+`mycel <verb>` is shorthand for `mycel app <verb>` — the app-builder is the default
+noun; future family tools mount as their own nouns. Run `mycel help` for the full
+flag list, including `cluster`'s sub-verbs (`environments`, `pipeline`,
+`deployments`, `manifest`, `promote`, …).
 
 ## License
 
-PROPRIETARY — CogniWorks. All rights reserved.
+Apache License, Version 2.0 — see [LICENSE](LICENSE). Copyright © Cogniworks
+Private Limited. "mycel" and the `mycel_*` family names are trademarks of
+Cogniworks Private Limited (see [NOTICE](NOTICE)); the license does not grant
+rights to them beyond what Apache-2.0 itself allows for describing the
+software's origin.
+
+Third-party dependency attributions are listed in
+[third_party_licenses/NOTICES](third_party_licenses/NOTICES).
